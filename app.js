@@ -18,6 +18,10 @@ app.post("/api/product", ProductCtrl.saveProduct);
 app.put("/api/product/:productId", ProductCtrl.updateProduct);
 app.delete("/api/product/:productId", ProductCtrl.deleteProduct);
 
+app.get("/api/test", (req, res) => {
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo..." });
+});
+
 app.get("/api/documents", DocumentCtrl.getDocuments);
 
 module.exports = app;
