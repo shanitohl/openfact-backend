@@ -23,5 +23,15 @@ app.get("/api/test", (req, res) => {
 });
 
 app.get("/api/documents", DocumentCtrl.getDocuments);
+//app.post("/api/documents/invoices", DocumentCtrl.getDocuments);
+
+app.post("/api/documents/invoices",  DocumentCtrl.getDocuments);
+
+// (req, res) => {
+//     console.log(req.body);
+//     res.status(200).send({ message: req.body.paging });
+// });
+
+app.put('/users/:userId', (req, res) => { return res.send( `PUT HTTP method on user/${req.params.userId} resource`, ); });
 
 module.exports = app;

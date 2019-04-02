@@ -13,18 +13,30 @@ function getDocument(req, res) {
 }
 
 function getDocuments(req, res) {   
-    //client.connect()
-
-    db.query("select d.id,d.document_id,d.issue_date,d.document_currency_code,a.value total,d.customer_assigned_account_id,d.customer_registration_name,d.baja_en_proceso,d.status from document d inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' LIMIT 10 OFFSET 1;", (err, result) => {
+    //client.connect("POST /api/documents");
+    console.log(req.body.paging)
+    let paging = req.body.paging;
+    let totalSize=0;
+    db.query("select count(*) from document where organization_id = 'fa8825af-efc5-4aaf-b06e-cd243a1ac89b';",(err, result)=>{
         if (err) {
             console.log(err);
             return next(err)
           }
-      console.log(result.rows.length)
-      res.status(200).send(result.rows);
-      //client.end()
-    
-    })
+          console.log(result.rows[0].count);
+          totalSize = result.rows[0].count;
+
+          db.query("select d.id,d.document_id,d.issue_date,d.document_currency_code,a.value total,d.customer_assigned_account_id,d.customer_registration_name,d.baja_en_proceso,d.status from document d inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' where organization_id = 'fa8825af-efc5-4aaf-b06e-cd243a1ac89b' LIMIT "+paging.pageSize+" OFFSET "+paging.page+";", (err, result) => {
+            if (err) {
+                console.log(err);
+                return next(err)
+              }
+          console.log(result.rows.length)
+          res.status(200).send({totalSize:totalSize,items:result.rows} );
+          //client.end()        
+        })
+    });
+
+   
 }
 
 function saveDocument(req, res) {
