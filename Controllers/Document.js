@@ -99,9 +99,18 @@ function getExcelDocument(req, res) {
                 //return next(err)
             }
             console.log(result.rows.length);
+            let workbook = serviceExcel.createExcelDocument(result.rows);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+            workbook.xlsx.write(res)
+                .then(function (data) {
+                    res.end();
+                    console.log('File write done........');
+                });
             // You can then return this straight
-            res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers)
-            return res.status(200).send(serviceExcel.createExcelDocument(result.rows));
+            //res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers)
+            //res.end();
+            //return res.status(200).send(serviceExcel.createExcelDocument(result.rows));
         })
     });
 

@@ -18,7 +18,8 @@
     "moment": "^2.24.0",
     "mongoose": "^5.4.19",
     "node-excel-export": "^1.4.4",
-    "pg": "^7.9.0"
+    "pg": "^7.9.0",
+    "tempfile": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
