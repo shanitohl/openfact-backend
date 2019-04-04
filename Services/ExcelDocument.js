@@ -76,10 +76,20 @@ function createExcelDocument(rows) {
   workbook.lastPrinted = new Date();
   workbook.properties.date1904 = true;
   var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
+
+//  sheet.addRow({i: 1, issue_date: 'John Doe', echa_vencimiento: new Date(1970,1,1)});
+//  sheet.addRow({id: 2, name: 'Jane Doe', dob: new Date(1965,1,7)});
+  //sheet.addRow([3, 'Sam', new Date()]);
+  sheet.mergeCells('C1', 'J2');
+  sheet.getCell('C1').value = 'Client List'
+  
+  sheet.getRow(9).values = ['I', 'issue_date', 'fecha_vencimiento', 'tipo_doc', 'serie', 'numero', 'tipo_doc_cliente', 'customer_assigned_account_id', 'customer_assigned_account_id', 'exportacion', 'gravada', 'exonerada', 'inafecta',
+  'ValorIsc','valorIgv','otros_tributos','importe_total','tipo_cambio','document_currency_code','fechaDocRel','tipoDocRel','serieDocRel','numeroDocRel','porcenjeIgv','status','codigo','status_message','xml_digest_value'];
+
   sheet.columns = [
     { key: 'i', header: 'DE LA OPERACION', width: 10 },
     { key: 'issue_date', header: 'O DOCUMENTO', width: 15, type: 'date', style: { numFmt: 'dd/mm/yyyy' } },
-    { key: 'echa_vencimiento', header: 'DE LA OPERACION', width: 15 },
+    { key: 'fecha_vencimiento', header: 'DE LA OPERACION', width: 15 },
     { key: 'tipo_doc', header: 'TIPO DOC', width: 10 },
     { key: 'serie', header: 'SERIE', width: 10 },
     { key: 'numero', header: 'NUMERO', width: 15 },
@@ -87,11 +97,11 @@ function createExcelDocument(rows) {
     { key: 'customer_assigned_account_id', header: 'NUMERO DOC', width: 15 },
     { key: 'customer_registration_name', header: 'RAZON SOCIAL', width: 32 },
     { key: 'exportacion', header: 'EXPORTACION', width: 10, type: 'decimal' },
-    { key: 'gravada', header: 'GRAVADA', width: 10 },
+    { key: 'gravada', header: 'GRAVADA', width: 10, style: { numFmt: '#,##0.00' }},
     { key: 'exonerada', header: 'EXONERADA', width: 10, type: 'decimal' },
     { key: 'inafecta', header: 'INAFECTA', width: 10, type: 'decimal' },
-    { key: 'ISC', header: 'ISC', width: 10, type: 'decimal' },
-    { key: 'IGV', header: 'IGV', width: 10, type: 'decimal' },
+    { key: 'ValorIsc', header: 'ISC', width: 10, type: 'decimal' },
+    { key: 'valorIgv', header: 'IGV', width: 10, type: 'decimal' },
     { key: 'otros_tributos', header: 'OTROS TRIBUTOS', width: 10, type: 'decimal' },
     { key: 'importe_total', header: 'IMPORTE TOTAL', width: 10, type: 'decimal' },
     { key: 'tipo_cambio', header: 'TIPO CAMBIO', width: 10, type: 'decimal' },
@@ -110,7 +120,7 @@ function createExcelDocument(rows) {
   ];
 
   //const dataset = rows;
-
+  
   // sheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
   // sheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
@@ -123,13 +133,13 @@ function createExcelDocument(rows) {
     sheet.addRow(valueArray); // add the array as a row in sheet}
     //count++;
   });
-  sheet.getColumn(11).numFmt = '#,##0.00';
+  //sheet.getColumn(11).numFmt = '#,##0.00';
   sheet.getColumn(12).numFmt = '#,##0.00';
   sheet.getColumn(13).numFmt = '#,##0.00';
   sheet.getColumn(14).numFmt = '#,##0.00';
   sheet.getColumn(15).numFmt = '#,##0.00';
   sheet.getColumn(16).numFmt = '#,##0.00';
-  sheet.getColumn(17).numFmt = '#,##0.00';  
+  sheet.getColumn(17).numFmt = '#,##0.00';
   //sheet.getCell('K2').numFmt = '0.00';
 
   return workbook;

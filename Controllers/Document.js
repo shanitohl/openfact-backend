@@ -96,9 +96,10 @@ function getExcelDocument(req, res) {
         db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo), (err, result) => {
             if (err) {
                 console.log(err);
+                return;
                 //return next(err)
             }
-            console.log(result.rows.length);
+            //console.log(result.rows.length);
             let workbook = serviceExcel.createExcelDocument(result.rows);
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
