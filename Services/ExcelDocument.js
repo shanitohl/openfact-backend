@@ -66,128 +66,184 @@ var moment = require('moment');
 
 // Create the excel report.
 // This function will return Buffer
-function createExcelDocument(rows) {
+function createExcelDocument(rows, periodo, ruc, razonSocial) {
 
-  var workbook = new excel.Workbook(); //creating workbook
-  workbook.creator = 'Openfact.pe';
-  workbook.lastModifiedBy = 'openfact';
-  workbook.created = new Date();
-  workbook.modified = new Date();
-  workbook.lastPrinted = new Date();
-  workbook.properties.date1904 = true;
-  var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
 
-//  sheet.addRow({i: 1, issue_date: 'John Doe', echa_vencimiento: new Date(1970,1,1)});
-//  sheet.addRow({id: 2, name: 'Jane Doe', dob: new Date(1965,1,7)});
-  //sheet.addRow([3, 'Sam', new Date()]);
-  sheet.mergeCells('C1', 'J2');
-  sheet.getCell('C1').value = 'Client List'
-  
-  sheet.getRow(9).values = ['I', 'issue_date', 'fecha_vencimiento', 'tipo_doc', 'serie', 'numero', 'tipo_doc_cliente', 'customer_assigned_account_id', 'customer_assigned_account_id', 'exportacion', 'gravada', 'exonerada', 'inafecta',
-  'ValorIsc','valorIgv','otros_tributos','importe_total','tipo_cambio','document_currency_code','fechaDocRel','tipoDocRel','serieDocRel','numeroDocRel','porcenjeIgv','status','codigo','status_message','xml_digest_value'];
+    var workbook = new excel.Workbook(); //creating workbook
+    workbook.creator = 'Openfact.pe';
+    workbook.lastModifiedBy = 'openfact';
+    workbook.created = new Date();
+    workbook.modified = new Date();
+    workbook.lastPrinted = new Date();
+    workbook.properties.date1904 = true;
+    var sheet = workbook.addWorksheet('MySheet'); //creating worksheet
 
-  sheet.columns = [
-    { key: 'i', header: 'DE LA OPERACION', width: 10 },
-    { key: 'issue_date', header: 'O DOCUMENTO', width: 15, type: 'date', style: { numFmt: 'dd/mm/yyyy' } },
-    { key: 'fecha_vencimiento', header: 'DE LA OPERACION', width: 15 },
-    { key: 'tipo_doc', header: 'TIPO DOC', width: 10 },
-    { key: 'serie', header: 'SERIE', width: 10 },
-    { key: 'numero', header: 'NUMERO', width: 15 },
-    { key: 'tipo_doc_cliente', header: 'DE LA OPERACION', width: 8 },
-    { key: 'customer_assigned_account_id', header: 'NUMERO DOC', width: 15 },
-    { key: 'customer_registration_name', header: 'RAZON SOCIAL', width: 32 },
-    { key: 'exportacion', header: 'EXPORTACION', width: 10, type: 'decimal' },
-    { key: 'gravada', header: 'GRAVADA', width: 10, style: { numFmt: '#,##0.00' }},
-    { key: 'exonerada', header: 'EXONERADA', width: 10, type: 'decimal' },
-    { key: 'inafecta', header: 'INAFECTA', width: 10, type: 'decimal' },
-    { key: 'ValorIsc', header: 'ISC', width: 10, type: 'decimal' },
-    { key: 'valorIgv', header: 'IGV', width: 10, type: 'decimal' },
-    { key: 'otros_tributos', header: 'OTROS TRIBUTOS', width: 10, type: 'decimal' },
-    { key: 'importe_total', header: 'IMPORTE TOTAL', width: 10, type: 'decimal' },
-    { key: 'tipo_cambio', header: 'TIPO CAMBIO', width: 10, type: 'decimal' },
-    { key: 'document_currency_code', header: 'MONEDA', width: 15 },
-    { key: 'fechaDocRel', header: 'FECHA', width: 10 },
-    { key: 'tipoDocRel', header: 'TIPO DOC', width: 10 },
-    { key: 'serieDocRel', header: 'SERIE', width: 10 },
-    { key: 'numeroDocRel', header: 'NUMERO', width: 10 },
-    { key: 'porcenjeIgv', header: 'IGV', width: 10 },
-    { key: 'status', header: 'ESTADO', width: 10 },
-    { key: 'codigo', header: 'CODIGO', width: 10 },
-    { key: 'status_message', header: 'MENSAJE', width: 32 },
-    { key: 'xml_digest_value', header: 'DIGIT VALUE', width: 10 }
-    // { key: 'issue_date', header: 'Name', width: 32 },
-    // { key: 'dob', header: 'D.O.B.', width: 10, outlineLevel: 1, type: 'date', formulae: [new Date(2016, 0, 1)] }
-  ];
+    // sheet.addRow({ i: 1, issue_date: 'John Doe', echa_vencimiento: new Date(1970, 1, 1) });
+    // sheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+    // sheet.addRow([3, 'Sam', new Date()]);
+    // sheet.mergeCells('D1', 'J1');
+    // sheet.getCell('D1').value = 'Client List';
+    sheet.mergeCells('A1', 'C1');
+    sheet.getCell('A1').value = 'Formato 14.1- Registro de Ventas e Ingresos';
+    sheet.addRow(['Perido:']);
+    sheet.addRow(['Ruc:', ruc]);
+    sheet.addRow(['Razon Social:', razonSocial]);
+    sheet.addRow(['Expresado en:', 'Soles']);
 
-  //const dataset = rows;
-  
-  // sheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-  // sheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
-  //sheet.addRow().values = Object.keys(rows[0]);
-  //let count = 0;
-  rows.forEach(function (item) {
-    var valueArray = [];
-    valueArray = Object.values(item); // forming an array of values of single json in an array
-    //if (count == 0) console.log(valueArray);
-    sheet.addRow(valueArray); // add the array as a row in sheet}
-    //count++;
-  });
-  //sheet.getColumn(11).numFmt = '#,##0.00';
-  sheet.getColumn(12).numFmt = '#,##0.00';
-  sheet.getColumn(13).numFmt = '#,##0.00';
-  sheet.getColumn(14).numFmt = '#,##0.00';
-  sheet.getColumn(15).numFmt = '#,##0.00';
-  sheet.getColumn(16).numFmt = '#,##0.00';
-  sheet.getColumn(17).numFmt = '#,##0.00';
-  //sheet.getCell('K2').numFmt = '0.00';
 
-  return workbook;
+    //let offset = 7;
+    sheet.getRow(7, 0, new Array());
 
-  // workbook.xlsx.writeFile('./temp.xlsx').then(function () {
-  //   console.log("file is written");
-  // });
-  // var tempfile = require('tempfile');
-  // var tempFilePath = tempfile('.xlsx');
-  // console.log("tempFilePath : ", tempFilePath);
-  // workbook.xlsx.writeFile(tempFilePath).then(function () {
-  //   res.sendFile(tempFilePath, function (err) {
-  //     console.log('---------- error downloading file: ', err);
-  //   });
-  //   console.log('file is written');
-  // });
+    //if (workbook >= 5) {
+    // sheet.getRow(5).values = ['i', 'issue_date', 'fecha_vencimiento', 'tipo_doc', 'serie', 'numero', 'tipo_doc_cliente', 'customer_assigned_account_id', 'customer_assigned_account_id', 'exportacion', 'gravada', 'exonerada', 'inafecta',
+    //     'ValorIsc', 'valorIgv', 'otros_tributos', 'importe_total', 'tipo_cambio', 'document_currency_code', 'fechaDocRel', 'tipoDocRel', 'serieDocRel', 'numeroDocRel', 'porcenjeIgv', 'status', 'codigo', 'status_message', 'xml_digest_value'
+    // ];
+    sheet.getRow(7).values = ['DE LA OPERACION', 'FECHA', 'DE LA OPERACION', 'TIPO DOC', 'SERIE', 'NUMERO', 'DE LA OPERACION', 'NUMERO DUC', 'NUMERO DUC', 'EXPORTACION',
+        'GRAVADA', 'EXONERADA', 'INAFECTA', 'ISC', 'IGV', 'OTROS TRIBUTOS', 'IMPORTE TOTAL', 'TIPO CAMBIO', 'MONEDA', 'FECHA', 'TIPO DOC', 'SERIE', 'NUMERO',
+        'IGV', 'ESTADO', 'CODIGO', 'MENSAJE', 'DIGIT VALUE'
+    ];
 
-  // [
-  //   {customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown'},
-  //   {customer_name: 'HP', status_id: 0, note: 'some note'},
-  //   {customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown'}
-  // ]
+    // sheet.getRow().values = [
+    //     'DE LA OPERACION', 'O DOCUMENTO', 'DE LA OPERACION', 'TIPO DOC','SERIE','NUMERO','DE LA OPERACION','NUMERO DOC','RAZON SOCIAL'
+    // ];
+    //}
 
-  // Define an array of merges. 1-1 = A:1
-  // The merges are independent of the data.
-  // A merge will overwrite all data _not_ in the top-left cell.
-  // const merges = [
-  //   { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
-  //   { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
-  //   { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
-  // ]
+    // sheet.columns = [
+    //     { key: 'i', header: 'DE LA OPERACION', width: 10 },
+    //     { key: 'issue_date', header: 'O DOCUMENTO', width: 15, type: 'date', style: { numFmt: 'dd/mm/yyyy' } },
+    //     { key: 'fecha_vencimiento', header: 'DE LA OPERACION', width: 15 },
+    //     { key: 'tipo_doc', header: 'TIPO DOC', width: 10 },
+    //     { key: 'serie', header: 'SERIE', width: 10 },
+    //     { key: 'numero', header: 'NUMERO', width: 15 },
+    //     { key: 'tipo_doc_cliente', header: 'DE LA OPERACION', width: 8 },
+    //     { key: 'customer_assigned_account_id', header: 'NUMERO DOC', width: 15 },
+    //     { key: 'customer_registration_name', header: 'RAZON SOCIAL', width: 32 },
+    //     { key: 'exportacion', header: 'EXPORTACION', width: 10, type: 'decimal' },
+    //     { key: 'gravada', header: 'GRAVADA', width: 10, style: { numFmt: '#,##0.00' } },
+    //     { key: 'exonerada', header: 'EXONERADA', width: 10, type: 'decimal' },
+    //     { key: 'inafecta', header: 'INAFECTA', width: 10, type: 'decimal' },
+    //     { key: 'ValorIsc', header: 'ISC', width: 10, type: 'decimal' },
+    //     { key: 'valorIgv', header: 'IGV', width: 10, type: 'decimal' },
+    //     { key: 'otros_tributos', header: 'OTROS TRIBUTOS', width: 10, type: 'decimal' },
+    //     { key: 'importe_total', header: 'IMPORTE TOTAL', width: 10, type: 'decimal' },
+    //     { key: 'tipo_cambio', header: 'TIPO CAMBIO', width: 10, type: 'decimal' },
+    //     { key: 'document_currency_code', header: 'MONEDA', width: 15 },
+    //     { key: 'fechaDocRel', header: 'FECHA', width: 10 },
+    //     { key: 'tipoDocRel', header: 'TIPO DOC', width: 10 },
+    //     { key: 'serieDocRel', header: 'SERIE', width: 10 },
+    //     { key: 'numeroDocRel', header: 'NUMERO', width: 10 },
+    //     { key: 'porcenjeIgv', header: 'IGV', width: 10 },
+    //     { key: 'status', header: 'ESTADO', width: 10 },
+    //     { key: 'codigo', header: 'CODIGO', width: 10 },
+    //     { key: 'status_message', header: 'MENSAJE', width: 20 },
+    //     { key: 'xml_digest_value', header: 'DIGIT VALUE', width: 10 }
+    //     // { key: 'issue_date', header: 'Name', width: 32 },
+    //     // { key: 'dob', header: 'D.O.B.', width: 10, outlineLevel: 1, type: 'date', formulae: [new Date(2016, 0, 1)] }
+    // ];
 
-  // const report = excel.buildExport(
-  //   [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-  //     {
-  //       name: 'Reporte de ventas', // <- Specify sheet name (optional)
-  //       heading: heading, // <- Raw heading array (optional)
-  //       merges: merges, // <- Merge cell ranges
-  //       specification: specification, // <- Report specification
-  //       data: dataset // <-- Report data
-  //     }
-  //   ]
-  // );
-  // return report;
+    //const dataset = rows;
+    // sheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
+    // sheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
+
+    //sheet.addRow().values = Object.keys(rows[0]);
+    //let count = 0;
+    rows.forEach(function(item) {
+        var valueArray = [];
+        valueArray = Object.values(item); // forming an array of values of single json in an array
+        //if (count == 0) console.log(valueArray);
+        sheet.addRow(valueArray); // add the array as a row in sheet}
+        //count++;
+    });
+    console.log("Cargando datos")
+        //sheet.getColumn(11).numFmt = '#,##0.00';
+    sheet.getColumn(12).numFmt = '#,##0.00';
+    sheet.getColumn(13).numFmt = '#,##0.00';
+    sheet.getColumn(14).numFmt = '#,##0.00';
+    sheet.getColumn(15).numFmt = '#,##0.00';
+    sheet.getColumn(16).numFmt = '#,##0.00';
+    sheet.getColumn(17).numFmt = '#,##0.00';
+
+    //sheet.getCell('K2').numFmt = '0.00';
+
+    sheet.getColumn(1).width = 15;
+    sheet.getColumn(2).width = 15;
+    sheet.getColumn(2).numFmt = 'dd/mm/yyyy';
+    sheet.getColumn(3).width = 15;
+    sheet.getColumn(4).width = 10;
+    sheet.getColumn(5).width = 10;
+    sheet.getColumn(6).width = 15;
+    sheet.getColumn(7).width = 8;
+    sheet.getColumn(8).width = 15;
+    sheet.getColumn(9).width = 22;
+    sheet.getColumn(10).width = 10;
+    sheet.getColumn(11).width = 10;
+    sheet.getColumn(12).width = 10;
+    sheet.getColumn(13).width = 10;
+    sheet.getColumn(14).width = 10;
+    sheet.getColumn(15).width = 10;
+    sheet.getColumn(16).width = 10;
+    sheet.getColumn(17).width = 10;
+    sheet.getColumn(18).width = 10;
+    sheet.getColumn(19).width = 10;
+    sheet.getColumn(20).width = 10;
+    sheet.getColumn(21).width = 10;
+    sheet.getColumn(22).width = 10;
+    sheet.getColumn(23).width = 10;
+    sheet.getColumn(24).width = 10;
+    sheet.getColumn(25).width = 10;
+    sheet.getColumn(26).width = 10;
+    sheet.getColumn(27).width = 10;
+    sheet.getColumn(28).width = 20;
+    sheet.getColumn(29).width = 10;
+
+
+
+    return workbook;
+
+    // workbook.xlsx.writeFile('./temp.xlsx').then(function () {
+    //   console.log("file is written");
+    // });
+    // var tempfile = require('tempfile');
+    // var tempFilePath = tempfile('.xlsx');
+    // console.log("tempFilePath : ", tempFilePath);
+    // workbook.xlsx.writeFile(tempFilePath).then(function () {
+    //   res.sendFile(tempFilePath, function (err) {
+    //     console.log('---------- error downloading file: ', err);
+    //   });
+    //   console.log('file is written');
+    // });
+
+    // [
+    //   {customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown'},
+    //   {customer_name: 'HP', status_id: 0, note: 'some note'},
+    //   {customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown'}
+    // ]
+
+    // Define an array of merges. 1-1 = A:1
+    // The merges are independent of the data.
+    // A merge will overwrite all data _not_ in the top-left cell.
+    // const merges = [
+    //   { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
+    //   { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
+    //   { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
+    // ]
+
+    // const report = excel.buildExport(
+    //   [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+    //     {
+    //       name: 'Reporte de ventas', // <- Specify sheet name (optional)
+    //       heading: heading, // <- Raw heading array (optional)
+    //       merges: merges, // <- Merge cell ranges
+    //       specification: specification, // <- Report specification
+    //       data: dataset // <-- Report data
+    //     }
+    //   ]
+    // );
+    // return report;
 }
 
 
 module.exports = {
-  createExcelDocument
+    createExcelDocument
 }
-
