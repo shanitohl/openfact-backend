@@ -1,6 +1,6 @@
 'use strict'
 
-
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -25,10 +25,10 @@ app.use(bodyParser.json());
 // app.get("/api/documents", DocumentCtrl.getDocuments);
 //app.post("/api/documents/invoices", DocumentCtrl.getDocuments);
 
-app.post("/api/documents/invoices",  DocumentCtrl.getDocuments);
+app.post("/api/documents/invoices", DocumentCtrl.getDocuments);
 
 
-app.post("/api/admin/organizations/:organization_name/excel",DocumentCtrl.getExcelDocument);
+app.post("/api/admin/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
 
 // (req, res) => {
 //     console.log(req.params);

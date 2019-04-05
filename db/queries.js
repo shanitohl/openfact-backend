@@ -46,13 +46,18 @@ function getQueryReportVentas(organization_id, dateFrom, dateTo) {
                 left join document_attribute c on doc.id = c.document_id and c.name = 'legalMonetaryTotalPayableAmount'
                 left join document_attribute tipo_doc_client on doc.id = tipo_doc_client.document_id and tipo_doc_client.name = 'customerAdditionalAccountID'
                 left join document_attribute d on doc.id = d.document_id and d.name = 'invoiceTypeCode'
-              where doc.organization_id =  '`+organization_id+`' and doc.document_type in ('INVOICE','CREDIT_NOTE','DEBIT_NOTE')
-              and doc.issue_date BETWEEN '2019-01-01' AND '2019-02-28' order by doc.issue_date desc;`;
+              where doc.organization_id =  '`+ organization_id + `' and doc.document_type in ('INVOICE','CREDIT_NOTE','DEBIT_NOTE')
+              and doc.issue_date BETWEEN to_date('`+ dateFrom + `','YYYY-MM-DD') AND to_date('` + dateTo + `','YYYY-MM-DD') order by doc.issue_date desc;`;
   return query;
 }
 
-function getQueryFindOrganization(organization_name) {
-  let query = "select id from organization where name = '" + organization_name + "';";
+function getQueryFindOrganization(organization_name, master) {
+  let query = "select id,is_master_storage,name from organization where name in ('" + organization_name + "','" + master + "');";
+  return query;
+}
+
+function getQueryFindOrganizationStorageConfig(organization_id) {
+  let query = "select organization_id,value,name from organization_storage_config where organization_id = '" + organization_id + "';";
   return query;
 }
 
@@ -61,5 +66,6 @@ module.exports = {
   getQuerySelectAllDocuments,
   getQueryCountDocumentsByOrganization,
   getQueryReportVentas,
-  getQueryFindOrganization
+  getQueryFindOrganization,
+  getQueryFindOrganizationStorageConfig
 }
