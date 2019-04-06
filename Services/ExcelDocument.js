@@ -66,7 +66,7 @@ var moment = require('moment');
 
 // Create the excel report.
 // This function will return Buffer
-function createExcelDocument(rows, periodo, ruc, razonSocial) {
+function createExcelDocument(rows, ruc, razonSocial, periodo) {
 
 
     var workbook = new excel.Workbook(); //creating workbook
@@ -83,71 +83,805 @@ function createExcelDocument(rows, periodo, ruc, razonSocial) {
     // sheet.addRow([3, 'Sam', new Date()]);
     // sheet.mergeCells('D1', 'J1');
     // sheet.getCell('D1').value = 'Client List';
-    sheet.mergeCells('A1', 'C1');
+
+    sheet.mergeCells('A1', 'D1');
     sheet.getCell('A1').value = 'Formato 14.1- Registro de Ventas e Ingresos';
-    sheet.addRow(['Perido:']);
+    sheet.getRow(1).font = { size: 8, bold: true };
+    sheet.addRow(['Perido:', periodo]);
     sheet.addRow(['Ruc:', ruc]);
     sheet.addRow(['Razon Social:', razonSocial]);
     sheet.addRow(['Expresado en:', 'Soles']);
+    sheet.getRow(2).font = { size: 8, bold: true };
+    sheet.getRow(3).font = { size: 8, bold: true };
+    sheet.getRow(4).font = { size: 8, bold: true };
+    sheet.getRow(5).font = { size: 8, bold: true };
 
+    sheet.addRow(['']);
+    sheet.addRow(['NUMERO', 'FECHA DE', 'FECHA', ' ', '', '', '', '', '', '', 'VALOR', 'BASE', '', '', '', '', '', '', '', '']);
+    sheet.addRow(['CORRELATIVO', ' EMISION DEL', 'DE', ' ', '', '', '', '', '', 'FACTURA', 'IMPONIBLE', '', '', '', '', '', '', 'TIPO', '']);
+    sheet.addRow(['DEL REGISTRO O', 'COMPROBANTE', 'VMTO', '', '', '', '', '', 'APELLIDOS Y NOMBRES', 'DE LA', '', '', '', 'ISC', 'IGV Y/O IPM', 'OTROS', 'IMPORTE', 'DE', '', '']);
+    sheet.addRow(['CODIGO UNICO', 'DE PAGO', 'Y/O PAG', 'TIPO', 'SERIE O NRO', 'NUMERO', 'TIPO', 'NUMERO', 'O RAZON SOCIAL', 'EXPORTACION', 'OPERACION', 'EXONERADO', 'INAFECTADO', '', '',
+        'TRIBUTOS', 'TOTAL', 'CAMBIO', 'MONEDA', 'FECHA', 'TIPO', 'SERIE', 'NUMERO', 'PORC.IGV', 'ESTADO', 'CODIGO', 'MENSAJE', 'OBSERVACIÓN'
+    ]);
+    sheet.addRow(['DE LA OPERACION', 'O DOCUMENTO', '', '', 'MAQ. REGIST.', '', '', '', '', '', 'GRAVADA', '']);
+    sheet.getRow(7).font = { size: 8, bold: true, };
+    sheet.getCell('A7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: '' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('B7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: '' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('C7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: '' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('D7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('G7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('J7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('K7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('L7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('N7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('O7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('P7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Q7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('R7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('S7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('T7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('X7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Y7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Z7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AA7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AB7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AC7').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getRow(8).font = { size: 8, bold: true };
+    sheet.getCell('A8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('B8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('C8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('D8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('G8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('J8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('K8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('L8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('N8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('O8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('P8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Q8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('R8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('S8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('T8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('X8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Y8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Z8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AA8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AB8').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getRow(9).font = { size: 8, bold: true };
+    sheet.getCell('A9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('B9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('C9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('D9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('E9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('F9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('G9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('I9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('J9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('K9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('L9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('M9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('N9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('O9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('P9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Q9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('R9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('S9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('T9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('U9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('V9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('W9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('X9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Y9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Z9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AA9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AB9').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getRow(10).font = { size: 8, bold: true };
+    sheet.getCell('A10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('B10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('C10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('D10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('E10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('F10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('G10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('H10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('I10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('J10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('K10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('L10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('M10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('N10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('O10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('P10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Q10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('R10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('S10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('T10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('U10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('V10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('W10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('X10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Y10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Z10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AA10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AB10').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getRow(11).font = { size: 8, bold: true };
+    sheet.getCell('A11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('B11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('C11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('D11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('E11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('F11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('G11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('H11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('I11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('J11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('K11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('L11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('M11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('N11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('O11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('P11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Q11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('R11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('S11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('T11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('U11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('V11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('W11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('X11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Y11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('Z11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AA11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.getCell('AB11').border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+    };
+    sheet.mergeCells('D7', 'F7');
+    sheet.getCell('D7').value = 'COMPROBANTE DE PAGO';
+    sheet.mergeCells('D8', 'F8');
+    sheet.getCell('D8').value = 'O DOCUMENTO';
+    sheet.mergeCells('G7', 'I7');
+    sheet.getCell('G7').value = 'INFORME DEL CLIENTE';
+    sheet.mergeCells('G8', 'I8');
+    sheet.getCell('G8').value = '';
+    sheet.mergeCells('G9', 'H9');
+    sheet.getCell('G8').value = 'DOC. IDENTIDAD';
 
+    sheet.mergeCells('L7', 'M7');
+    sheet.getCell('L7').value = 'INPORTE TOTAL DE LA';
+    sheet.mergeCells('L8', 'M8');
+    sheet.getCell('L8').value = 'OPERACION';
+
+    sheet.mergeCells('T7', 'W7');
+    sheet.getCell('T7').value = 'INPORTE TOTAL DE LA';
+    sheet.mergeCells('T8', 'W8');
+    sheet.getCell('L8').value = 'OPERACION';
 
     //let offset = 7;
-    sheet.getRow(7, 0, new Array());
+    sheet.getRow(11, 0, new Array());
 
-    //if (workbook >= 5) {
-    // sheet.getRow(5).values = ['i', 'issue_date', 'fecha_vencimiento', 'tipo_doc', 'serie', 'numero', 'tipo_doc_cliente', 'customer_assigned_account_id', 'customer_assigned_account_id', 'exportacion', 'gravada', 'exonerada', 'inafecta',
-    //     'ValorIsc', 'valorIgv', 'otros_tributos', 'importe_total', 'tipo_cambio', 'document_currency_code', 'fechaDocRel', 'tipoDocRel', 'serieDocRel', 'numeroDocRel', 'porcenjeIgv', 'status', 'codigo', 'status_message', 'xml_digest_value'
-    // ];
-    sheet.getRow(7).values = ['DE LA OPERACION', 'FECHA', 'DE LA OPERACION', 'TIPO DOC', 'SERIE', 'NUMERO', 'DE LA OPERACION', 'NUMERO DUC', 'NUMERO DUC', 'EXPORTACION',
-        'GRAVADA', 'EXONERADA', 'INAFECTA', 'ISC', 'IGV', 'OTROS TRIBUTOS', 'IMPORTE TOTAL', 'TIPO CAMBIO', 'MONEDA', 'FECHA', 'TIPO DOC', 'SERIE', 'NUMERO',
-        'IGV', 'ESTADO', 'CODIGO', 'MENSAJE', 'DIGIT VALUE'
-    ];
-
-    // sheet.getRow().values = [
-    //     'DE LA OPERACION', 'O DOCUMENTO', 'DE LA OPERACION', 'TIPO DOC','SERIE','NUMERO','DE LA OPERACION','NUMERO DOC','RAZON SOCIAL'
-    // ];
-    //}
-
-    // sheet.columns = [
-    //     { key: 'i', header: 'DE LA OPERACION', width: 10 },
-    //     { key: 'issue_date', header: 'O DOCUMENTO', width: 15, type: 'date', style: { numFmt: 'dd/mm/yyyy' } },
-    //     { key: 'fecha_vencimiento', header: 'DE LA OPERACION', width: 15 },
-    //     { key: 'tipo_doc', header: 'TIPO DOC', width: 10 },
-    //     { key: 'serie', header: 'SERIE', width: 10 },
-    //     { key: 'numero', header: 'NUMERO', width: 15 },
-    //     { key: 'tipo_doc_cliente', header: 'DE LA OPERACION', width: 8 },
-    //     { key: 'customer_assigned_account_id', header: 'NUMERO DOC', width: 15 },
-    //     { key: 'customer_registration_name', header: 'RAZON SOCIAL', width: 32 },
-    //     { key: 'exportacion', header: 'EXPORTACION', width: 10, type: 'decimal' },
-    //     { key: 'gravada', header: 'GRAVADA', width: 10, style: { numFmt: '#,##0.00' } },
-    //     { key: 'exonerada', header: 'EXONERADA', width: 10, type: 'decimal' },
-    //     { key: 'inafecta', header: 'INAFECTA', width: 10, type: 'decimal' },
-    //     { key: 'ValorIsc', header: 'ISC', width: 10, type: 'decimal' },
-    //     { key: 'valorIgv', header: 'IGV', width: 10, type: 'decimal' },
-    //     { key: 'otros_tributos', header: 'OTROS TRIBUTOS', width: 10, type: 'decimal' },
-    //     { key: 'importe_total', header: 'IMPORTE TOTAL', width: 10, type: 'decimal' },
-    //     { key: 'tipo_cambio', header: 'TIPO CAMBIO', width: 10, type: 'decimal' },
-    //     { key: 'document_currency_code', header: 'MONEDA', width: 15 },
-    //     { key: 'fechaDocRel', header: 'FECHA', width: 10 },
-    //     { key: 'tipoDocRel', header: 'TIPO DOC', width: 10 },
-    //     { key: 'serieDocRel', header: 'SERIE', width: 10 },
-    //     { key: 'numeroDocRel', header: 'NUMERO', width: 10 },
-    //     { key: 'porcenjeIgv', header: 'IGV', width: 10 },
-    //     { key: 'status', header: 'ESTADO', width: 10 },
-    //     { key: 'codigo', header: 'CODIGO', width: 10 },
-    //     { key: 'status_message', header: 'MENSAJE', width: 20 },
-    //     { key: 'xml_digest_value', header: 'DIGIT VALUE', width: 10 }
-    //     // { key: 'issue_date', header: 'Name', width: 32 },
-    //     // { key: 'dob', header: 'D.O.B.', width: 10, outlineLevel: 1, type: 'date', formulae: [new Date(2016, 0, 1)] }
+    // sheet.getRow(12).values = ['DE LA OPERACION', 'FECHA', 'DE LA OPERACION', 'TIPO DOC', 'SERIE', 'NUMERO', 'DE LA OPERACION', 'NUMERO DUC', 'NUMERO DUC', 'EXPORTACION',
+    //     'GRAVADA', 'EXONERADA', 'INAFECTA', 'ISC', 'IGV', 'OTROS TRIBUTOS', 'IMPORTE TOTAL', 'TIPO CAMBIO', 'MONEDA', 'FECHA', 'TIPO DOC', 'SERIE', 'NUMERO',
+    //     'IGV', 'ESTADO', 'CODIGO', 'MENSAJE', 'DIGIT VALUE'
     // ];
 
-    //const dataset = rows;
-    // sheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-    // sheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
-
-    //sheet.addRow().values = Object.keys(rows[0]);
-    //let count = 0;
     rows.forEach(function(item) {
         var valueArray = [];
         valueArray = Object.values(item); // forming an array of values of single json in an array
@@ -163,8 +897,6 @@ function createExcelDocument(rows, periodo, ruc, razonSocial) {
     sheet.getColumn(15).numFmt = '#,##0.00';
     sheet.getColumn(16).numFmt = '#,##0.00';
     sheet.getColumn(17).numFmt = '#,##0.00';
-
-    //sheet.getCell('K2').numFmt = '0.00';
 
     sheet.getColumn(1).width = 15;
     sheet.getColumn(2).width = 15;
@@ -197,53 +929,8 @@ function createExcelDocument(rows, periodo, ruc, razonSocial) {
     sheet.getColumn(28).width = 20;
     sheet.getColumn(29).width = 10;
 
-
-
     return workbook;
-
-    // workbook.xlsx.writeFile('./temp.xlsx').then(function () {
-    //   console.log("file is written");
-    // });
-    // var tempfile = require('tempfile');
-    // var tempFilePath = tempfile('.xlsx');
-    // console.log("tempFilePath : ", tempFilePath);
-    // workbook.xlsx.writeFile(tempFilePath).then(function () {
-    //   res.sendFile(tempFilePath, function (err) {
-    //     console.log('---------- error downloading file: ', err);
-    //   });
-    //   console.log('file is written');
-    // });
-
-    // [
-    //   {customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown'},
-    //   {customer_name: 'HP', status_id: 0, note: 'some note'},
-    //   {customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown'}
-    // ]
-
-    // Define an array of merges. 1-1 = A:1
-    // The merges are independent of the data.
-    // A merge will overwrite all data _not_ in the top-left cell.
-    // const merges = [
-    //   { start: { row: 1, column: 1 }, end: { row: 1, column: 10 } },
-    //   { start: { row: 2, column: 1 }, end: { row: 2, column: 5 } },
-    //   { start: { row: 2, column: 6 }, end: { row: 2, column: 10 } }
-    // ]
-
-    // const report = excel.buildExport(
-    //   [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-    //     {
-    //       name: 'Reporte de ventas', // <- Specify sheet name (optional)
-    //       heading: heading, // <- Raw heading array (optional)
-    //       merges: merges, // <- Merge cell ranges
-    //       specification: specification, // <- Report specification
-    //       data: dataset // <-- Report data
-    //     }
-    //   ]
-    // );
-    // return report;
 }
-
-
 module.exports = {
     createExcelDocument
 }
