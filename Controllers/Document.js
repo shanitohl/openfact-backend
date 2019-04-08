@@ -113,13 +113,13 @@ function getExcelDocument(req, res) {
                     return;
                     //return next(err)
                 }
-                //console.log(result.rows.length);
+                console.log(result.rows.length);
                 let workbook = serviceExcel.createExcelDocument(result.rows, organization_name, "Mi Razon Social", req.body.dateFrom + " - " + req.body.dateTo);
                 res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
                 let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
                 workbook.xlsx.writeFile('./FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
-                    console.log("file is written in ./FilesGenerate/" + fileName + ".xlsx");
+                    console.log("file is written in ./FilesGenerate/" + fileName + ".xlsx for ID:" + organization_id);
 
                     require('isomorphic-fetch'); // or another library of choice.
                     var Dropbox = require('dropbox').Dropbox;

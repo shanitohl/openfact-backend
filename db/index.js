@@ -1,12 +1,12 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'openfact',
-    password: '123456',
-    port: 54321
-  })
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_DATA_BASE || 'openfact',
+  password: process.env.DB_PASSWORD || '123456',
+  port: process.env.DB_PORT || 5431//54321
+})
 
 module.exports = {
   query: (text, params, callback) => {
