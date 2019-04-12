@@ -18,9 +18,9 @@ app.use(bodyParser.json());
 // app.put("/api/product/:productId", ProductCtrl.updateProduct);
 // app.delete("/api/product/:productId", ProductCtrl.deleteProduct);
 
-// app.get("/api/test", (req, res) => {
-//     res.status(200).send({ message: "Servidor Nodejs esta corriendo..." });
-// });
+app.get("/api/test", (req, res) => {
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo..." });
+});
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);
 //app.post("/api/documents/invoices", DocumentCtrl.getDocuments);

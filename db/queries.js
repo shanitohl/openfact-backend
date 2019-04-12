@@ -52,7 +52,7 @@ function getQueryReportVentas(organization_id, dateFrom, dateTo) {
 }
 
 function getQueryFindOrganization(organization_name, master) {
-  let query = "select id,is_master_storage,name from organization where name in ('" + organization_name + "','" + master + "');";
+  let query = "select id,is_master_storage,name,description from organization where name in ('" + organization_name + "','" + master + "');";
   return query;
 }
 

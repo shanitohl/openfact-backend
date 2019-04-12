@@ -93,6 +93,7 @@ function getExcelDocument(req, res) {
             return next(err)
         }
         let organization_id = getOrganizationMaster(result1.rows, false, organization_name).id;//result1.rows[0].id;
+        let organization_description = getOrganizationMaster(result1.rows, false, organization_name).description;//result1.rows[0].id;
         let organization_id_storage = organization_id;
         let isMasterStoreage = result1.rows[0].is_master_storage;
         if (isMasterStoreage == '1') {
@@ -114,7 +115,7 @@ function getExcelDocument(req, res) {
                     //return next(err)
                 }
                 console.log(result.rows.length);
-                let workbook = serviceExcel.createExcelDocument(result.rows, organization_name, "Mi Razon Social", req.body.dateFrom + " - " + req.body.dateTo);
+                let workbook = serviceExcel.createExcelDocument(result.rows, organization_name, organization_description, req.body.dateFrom + " - " + req.body.dateTo);
                 res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
                 let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
