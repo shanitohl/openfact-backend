@@ -20,13 +20,14 @@
     "guid": "0.0.12",
     "isomorphic-fetch": "^2.2.1",
     "jwt-simple": "^0.5.5",
+    "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.4.19",
     "node-excel-export": "^1.4.4",
+    "nodemon": "^1.18.10",
     "pg": "^7.9.0",
     "tempfile": "^2.0.0",
-    "uuid": "^3.3.2",
-    "nodemon": "^1.18.10"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

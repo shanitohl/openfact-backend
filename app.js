@@ -7,7 +7,7 @@ const app = express();
 
 const ProductCtrl = require("./Controllers/Product");
 const DocumentCtrl = require("./Controllers/Document");
-
+var path = require('path');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,7 +19,19 @@ app.use(bodyParser.json());
 // app.delete("/api/product/:productId", ProductCtrl.deleteProduct);
 
 app.get("/api/test", (req, res) => {
-    res.status(200).send({ message: "Servidor Nodejs esta corriendo..." });
+    var mkdirp = require('mkdirp');
+
+    console.log(process.cwd());
+    console.log(process.chdir("./"));
+    console.log(process.execPath);
+    console.log(__dirname);
+    console.log(path.dirname(__dirname+'/tmp'));
+
+    mkdirp(__dirname+'/tmp', function (err) {
+        if (err) console.error(err)
+        else console.log('pow!')
+    });
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" });
 });
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);
