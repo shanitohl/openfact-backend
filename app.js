@@ -37,10 +37,10 @@ app.get("/api/test", (req, res) => {
 // app.get("/api/documents", DocumentCtrl.getDocuments);
 //app.post("/api/documents/invoices", DocumentCtrl.getDocuments);
 
-app.post("/api/admin/organizations/:organization_name/documents/invoices", DocumentCtrl.getDocuments);
+app.post("/api/organizations/:organization_name/documents/invoices", DocumentCtrl.getDocuments);
 
 
-app.post("/api/admin/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
+app.post("/api/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
 
 // (req, res) => {
 //     console.log(req.params);
