@@ -87,125 +87,121 @@ function deleteDocument(req, res) {
 
 function getExcelDocument(req, res) {
     //console.log(req.body);
-    
-    let organization_name = req.params.organization_name;    
-    console.log(organization_name);
-    db.query(querys.getQueryFindOrganization(organization_name, "master"), (err, result1) => {
-        if (err) {
-            console.log(err);
-            return next(err)
-        }
-        //console.log("Empresas encontradas : "+JSON.stringify(result1.rows));
-        let organization_id = getOrganizationMaster(result1.rows, false, organization_name).id;//result1.rows[0].id;
-        let organization_description = getOrganizationMaster(result1.rows, false, organization_name).description;//result1.rows[0].id;
-        let organization_id_storage = organization_id;
-        let isMasterStoreage = result1.rows[0].is_master_storage;
-        if (isMasterStoreage == '1') {
-            organization_id_storage = getOrganizationMaster(result1.rows, true, organization_name).id;
-        }
-        db.query(querys.getQueryFindOrganizationStorageConfig(organization_id_storage), (err, ressult2) => {
+    try {
+        let organization_name = req.params.organization_name;
+        console.log(organization_name);
+        db.query(querys.getQueryFindOrganization(organization_name, "master"), (err, result1) => {
             if (err) {
                 console.log(err);
-                return;
-                //return next(err)
-            };
-            let accessToken = getValueList(ressult2.rows, "DbxAccessToken").value;//ressult2.rows[0].value;
-            let clientIdentifier = getValueList(ressult2.rows, "DbxClientIdentifier").value;//ressult2.rows[1].value;
-            let userId = getValueList(ressult2.rows, "DbxUserId").value;//ressult2.rows[2].value;
-            db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo), (err, result) => {
+                return next(err)
+            }
+            //console.log("Empresas encontradas : "+JSON.stringify(result1.rows));
+            let organization_id = getOrganizationMaster(result1.rows, false, organization_name).id;//result1.rows[0].id;
+            let organization_description = getOrganizationMaster(result1.rows, false, organization_name).description;//result1.rows[0].id;
+            let organization_id_storage = organization_id;
+            let isMasterStoreage = result1.rows[0].is_master_storage;
+            if (isMasterStoreage == '1') {
+                organization_id_storage = getOrganizationMaster(result1.rows, true, organization_name).id;
+            }
+            db.query(querys.getQueryFindOrganizationStorageConfig(organization_id_storage), (err, ressult2) => {
                 if (err) {
                     console.log(err);
                     return;
                     //return next(err)
-                }
-                console.log(result.rows.length);
-                let workbook = serviceExcel.createExcelDocument(result.rows, organization_name, organization_description, req.body.dateFrom + " - " + req.body.dateTo);
-                //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                //res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
-                let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
-
-
-
-                mkdirp(process.cwd() + '/FilesGenerate', function (err) {
+                };
+                let accessToken = getValueList(ressult2.rows, "DbxAccessToken").value;//ressult2.rows[0].value;
+                let clientIdentifier = getValueList(ressult2.rows, "DbxClientIdentifier").value;//ressult2.rows[1].value;
+                let userId = getValueList(ressult2.rows, "DbxUserId").value;//ressult2.rows[2].value;
+                db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo), (err, result) => {
                     if (err) {
-                        console.log("Error al crear directorio..." + err);
-                        //return cb(err);                       
+                        console.log(err);
+                        return;
+                        //return next(err)
                     }
-                    workbook.xlsx.writeFile(process.cwd() + '/FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
-                        console.log("file is written in " + getDirName('/FilesGenerate') + " -- " + fileName + ".xlsx for ID:" + organization_id);
+                    console.log(result.rows.length);
+                    let workbook = serviceExcel.createExcelDocument(result.rows, organization_name, organization_description, req.body.dateFrom + " - " + req.body.dateTo);
+                    //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    //res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+                    let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
 
-                        require('isomorphic-fetch'); // or another library of choice.
-                        var Dropbox = require('dropbox').Dropbox;
-                        console.log(process.env.DBX_API_TOKEN);
-                        var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
 
-                        fs.readFile('./FilesGenerate/' + fileName + '.xlsx', function (err, contents) {
-                            dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
-                                .then(function (response) {
-                                    //var results = document.getElementById('results');
-                                    //results.appendChild(document.createTextNode('File uploaded!'));
-                                    //console.log(response);
-                                    let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
-                                        console.log("Url document : " + responseDb.url);
-                                        const query = {
-                                            text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
-                                            values: [uuidv1(), organization_id, fileName + ".xlsx", responseDb.url, req.body.dateFrom, req.body.dateTo, new Date()],
-                                        }
-                                        db.query(query, (err, res) => {
-                                            if (err) {
-                                                console.log(err.stack)
-                                            } else {
-                                                //console.log(res)
-                                                console.log("El archivo esta listo para su descarga desde la web.")
+
+                    mkdirp(process.cwd() + '/FilesGenerate', function (err) {
+                        if (err) {
+                            console.log("Error al crear directorio..." + err);
+                            //return cb(err);                       
+                        }
+                        workbook.xlsx.writeFile(process.cwd() + '/FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
+                            console.log("file is written in " + getDirName('/FilesGenerate') + " -- " + fileName + ".xlsx for ID:" + organization_id);
+
+                            require('isomorphic-fetch'); // or another library of choice.
+                            var Dropbox = require('dropbox').Dropbox;
+                            console.log(process.env.DBX_API_TOKEN);
+                            var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
+
+                            fs.readFile('./FilesGenerate/' + fileName + '.xlsx', function (err, contents) {
+                                dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
+                                    .then(function (response) {
+                                        //var results = document.getElementById('results');
+                                        //results.appendChild(document.createTextNode('File uploaded!'));
+                                        //console.log(response);
+                                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
+                                            console.log("Url document : " + responseDb.url);
+                                            const query = {
+                                                text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
+                                                values: [uuidv1(), organization_id, fileName + ".xlsx", responseDb.url, req.body.dateFrom, req.body.dateTo, new Date()],
                                             }
-                                        })
+                                            db.query(query, (err, res) => {
+                                                if (err) {
+                                                    console.log(err.stack)
+                                                } else {
+                                                    //console.log(res)
+                                                    console.log("El archivo esta listo para su descarga desde la web.")
+                                                }
+                                            })
 
+                                        });
+
+                                    })
+                                    .catch(function (error) {
+                                        console.error(error);
                                     });
-
-                                })
-                                .catch(function (error) {
-                                    console.error(error);
-                                });
+                            });
+                            res.status(200).send({ mensagge: "Se genero correctamente el archivo, espere unos momentos por favor..." });
                         });
-                        res.status(200).send({ mensagge: "Se genero correctamente el archivo, espere unos momentos por favor..." });
+
                     });
 
-                });
-
-                // dbx.filesListFolder({path: ''})
-                //   .then(function(response) {
-                //     console.log(response);
-                //   })
-                //   .catch(function(error) {
-                //     console.log(error);
-                //   });
+                    // dbx.filesListFolder({path: ''})
+                    //   .then(function(response) {
+                    //     console.log(response);
+                    //   })
+                    //   .catch(function(error) {
+                    //     console.log(error);
+                    //   });
 
 
 
-                // workbook.xlsx.write(res)
-                //     .then(function (data) {
-                //         res.end();
-                //         console.log('File write done........');
-                //     });
-                // You can then return this straight
-                //res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers)
-                //res.end();
-                //return res.status(200).send(serviceExcel.createExcelDocument(result.rows));
-            })
+                    // workbook.xlsx.write(res)
+                    //     .then(function (data) {
+                    //         res.end();
+                    //         console.log('File write done........');
+                    //     });
+                    // You can then return this straight
+                    //res.attachment('report.xlsx'); // This is sails.js specific (in general you need to set headers)
+                    //res.end();
+                    //return res.status(200).send(serviceExcel.createExcelDocument(result.rows));
+                })
 
+            });
+
+            //console.log(result1);
         });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Ocurrio un error al procesar la informacion.");
+    }
 
-        //console.log(result1);
-    });
-    // let productId = req.params.productId;
-    // Product.findById(productId, (err, product) => {
-    //     if (err) return res.status(500).send({ mensagge: "Error al borrar el dato" });
-    //     if (!product) return res.status(404).send({ mensagge: "El producto no existe" });
-    //     product.remove(err => {
-    //         if (err) return res.status(500).send({ mensagge: "Error al borrar el producto" });
-    //         res.status(200).send({ mensagge: "el prodcuto ha sido borrado" })
-    //     })
-    // });
 }
 
 //para subir mas de 150mb

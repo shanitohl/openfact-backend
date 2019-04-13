@@ -1,7 +1,9 @@
 'use strict'
 
 function getQuerySelectAllDocuments(organization_id, pageSize, page) {
-  let query = "select d.id,d.document_id,d.issue_date,d.document_currency_code,a.value total,d.customer_assigned_account_id,d.customer_registration_name,d.baja_en_proceso,d.status from document d inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' where organization_id = '" + organization_id + "' LIMIT " + pageSize + " OFFSET " + page + ";"
+  let query = `select d.id,d.document_id,d.issue_date,d.document_currency_code,a.value total,d.customer_assigned_account_id,d.customer_registration_name,d.baja_en_proceso,d.status 
+  from document d inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' 
+  where organization_id = '` + organization_id + `' LIMIT ` + pageSize + ` OFFSET ` + page + `;`
   return query;
 }
 
