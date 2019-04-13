@@ -86,13 +86,16 @@ function deleteDocument(req, res) {
 }
 
 function getExcelDocument(req, res) {
-    console.log(req.body)
-    let organization_name = req.params.organization_name;
+    //console.log(req.body);
+    
+    let organization_name = req.params.organization_name;    
+    console.log(organization_name);
     db.query(querys.getQueryFindOrganization(organization_name, "master"), (err, result1) => {
         if (err) {
             console.log(err);
             return next(err)
         }
+        //console.log("Empresas encontradas : "+JSON.stringify(result1.rows));
         let organization_id = getOrganizationMaster(result1.rows, false, organization_name).id;//result1.rows[0].id;
         let organization_description = getOrganizationMaster(result1.rows, false, organization_name).description;//result1.rows[0].id;
         let organization_id_storage = organization_id;
@@ -128,11 +131,6 @@ function getExcelDocument(req, res) {
                         console.log("Error al crear directorio..." + err);
                         //return cb(err);                       
                     }
-                    // mkdirp('/FilesGenerate', function (err) {
-                    //     if (err) console.error(err)
-                    //     else console.log('pow!........................................................')
-                    // });
-                    //fs.writeFile(path, contents, cb);
                     workbook.xlsx.writeFile(process.cwd() + '/FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
                         console.log("file is written in " + getDirName('/FilesGenerate') + " -- " + fileName + ".xlsx for ID:" + organization_id);
 
@@ -157,7 +155,8 @@ function getExcelDocument(req, res) {
                                             if (err) {
                                                 console.log(err.stack)
                                             } else {
-                                                console.log(res)
+                                                //console.log(res)
+                                                console.log("El archivo esta listo para su descarga desde la web.")
                                             }
                                         })
 

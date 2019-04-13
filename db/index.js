@@ -5,7 +5,7 @@ const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_DATA_BASE || 'openfact',
   password: process.env.DB_PASSWORD || '123456',
-  port: process.env.DB_PORT || 54321//54321
+  port: process.env.DB_PORT || 5431//54321
 })
 
 module.exports = {
