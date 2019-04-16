@@ -4,9 +4,7 @@
   "description": "Test node",
   "main": "index.js",
   "scripts": {    
-    "start": "nodemon index.js",     
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production webpack NODE_OPTIONS=--max_old_space_size=12000 --watch --progress --config internals/webpack/webpack.prod.babel.js --color -p --progress"
+    "start": "nodemon index.js"
   },
   "author": "ChanoHL",
   "license": "MIT",
