@@ -4,10 +4,13 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+var cors = require('cors');
 
 const ProductCtrl = require("./Controllers/Product");
 const DocumentCtrl = require("./Controllers/Document");
 var path = require('path');
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -41,6 +44,7 @@ app.post("/api/organizations/:organization_name/documents/invoices", DocumentCtr
 
 
 app.post("/api/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
+app.get("/api/organizations/:organization_name/sharedLinks", DocumentCtrl.getSharedDocument);
 
 // (req, res) => {
 //     console.log(req.params);

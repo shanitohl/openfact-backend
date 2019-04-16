@@ -1,7 +1,7 @@
 'use strict'
 
 const mongoose = require("mongoose");
-var cors = require('cors');
+
 
 const app = require("./app");
 const config = require("./config");
@@ -12,10 +12,10 @@ const config = require("./config");
 
 
 app.listen(config.port, () => {
-    console.log("API REST corriendo en http://localhost:" + config.port);
+    console.log("CORS-enabled web server listening on port:" + config.port);
 })
 
-app.use(cors());
+
 // mongoose.connect(config.db, (err, res) => {
 //     if (err) throw err;
 //     console.log("Conexion a la base de datos establecida");

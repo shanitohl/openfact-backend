@@ -5,16 +5,18 @@ const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_DATA_BASE || 'openfact',
   password: process.env.DB_PASSWORD || '123456',
-  port: process.env.DB_PORT || 5431//54321
+  port: process.env.DB_PORT || 54321//54321
 })
 
 module.exports = {
-  query: (text, params, callback) => {
-    const start = Date.now()
-    return pool.query(text, params, (err, res) => {
-      const duration = Date.now() - start
-      console.log('executed query', { text, duration, rows: res.rowCount })
-      callback(err, res)
-    })
-  }
+  // query: (text, params, callback) => {
+  //   const start = Date.now()
+  //   return pool.query(text, params, (err, res) => {
+  //     const duration = Date.now() - start
+  //     console.log('executed query', { text, duration, rows: res.rowCount })
+  //     callback(err, res)
+  //   })
+  // }
+
+  query: (text, params) => pool.query(text, params)
 }
