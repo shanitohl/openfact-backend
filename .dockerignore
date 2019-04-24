@@ -1,2 +1,10 @@
+e2e
+FilesGenerate
+temp
+.vs
 node_modules
 npm-debug.log
+*.gitingore
+*.dockerignore
+Dockerfile
+*.dockerfile

@@ -24,17 +24,17 @@ app.use(bodyParser.json());
 app.get("/api/test", (req, res) => {
     var mkdirp = require('mkdirp');
 
-    console.log(process.cwd());
-    console.log(process.chdir("./"));
-    console.log(process.execPath);
-    console.log(__dirname);
-    console.log(path.dirname(__dirname+'/tmp'));
+    // console.log(process.cwd());
+    // console.log(process.chdir("./"));
+    // console.log(process.execPath);
+    // console.log(__dirname);
+    console.log(path.dirname(__dirname + '/tmp'));
 
-    mkdirp(__dirname+'/tmp', function (err) {
+    mkdirp(__dirname + '/tmp', function (err) {
         if (err) console.error(err)
-        else console.log('pow!')
+        else console.log(__dirname+"/temp create folder")
     });
-    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" });
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" + __dirname + '/tmp' });
 });
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);

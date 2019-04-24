@@ -126,6 +126,7 @@ async function getExcelDocument(req, res) {
                 console.log("Error al crear directorio..." + err);
                 //return cb(err);                       
             }
+            console.log(process.cwd() + '/FilesGenerate');
             workbook.xlsx.writeFile(process.cwd() + '/FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
                 console.log("file is written in " + getDirName('/FilesGenerate') + " -- " + fileName + ".xlsx for ID:" + organization_id);
 
