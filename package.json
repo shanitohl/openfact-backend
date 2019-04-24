@@ -26,6 +26,7 @@
     "node-excel-export": "^1.4.4",
     "object-mapper": "^5.0.0",
     "pg": "^7.9.0",
+    "nodemon": "^1.18.10",
     "tempfile": "^2.0.0",
     "uuid": "^3.3.2"
   },

@@ -881,13 +881,13 @@ function createExcelDocument(rows, ruc, razonSocial, periodo) {
     //     'GRAVADA', 'EXONERADA', 'INAFECTA', 'ISC', 'IGV', 'OTROS TRIBUTOS', 'IMPORTE TOTAL', 'TIPO CAMBIO', 'MONEDA', 'FECHA', 'TIPO DOC', 'SERIE', 'NUMERO',
     //     'IGV', 'ESTADO', 'CODIGO', 'MENSAJE', 'DIGIT VALUE'
     // ];
-    let count = 0;
+    //let count = 0;
     rows.forEach(function (item) {
         var valueArray = [];
         valueArray = Object.values(item); // forming an array of values of single json in an array
-        if (count == 0) console.log(valueArray);
+        //if (count == 0) console.log(valueArray);
         sheet.addRow(valueArray); // add the array as a row in sheet}
-        count++;
+        //count++;
     });
     console.log("Cargando datos")
     //sheet.getColumn(11).numFmt = '#,##0.00';
