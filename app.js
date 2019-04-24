@@ -44,7 +44,7 @@ app.get("/api/test", (req, res) => {
             if(err) {
                 return console.log(err);
             }
-            fs.readFile(process.cwd() + './FilesGenerate/newfile.txt', function (err1, contents) {
+            fs.readFile(process.cwd() + '/FilesGenerate/newfile.txt', function (err1, contents) {
                 if(err1)return console.log(err1);
                 console.log("Archivo enconteraodoo...");
             });        
