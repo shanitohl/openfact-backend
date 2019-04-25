@@ -23,41 +23,57 @@ app.use(bodyParser.json());
 // app.delete("/api/product/:productId", ProductCtrl.deleteProduct);
 
 app.get("/api/test", (req, res) => {
-    var mkdirp = require('mkdirp');
+    //   var mkdirp = require('mkdirp');
 
-    console.log(" process.cwd() : "+process.cwd());
-    console.log(" path.dirname(__dirname + '/tmp') : "+path.dirname(__dirname + '/tmp'));
+    var tmp = require('tmp');
+
+    var tmpobj = tmp.dirSync();
+    console.log('File: ', tmpobj.name);
+    console.log('Filedescriptor: ', tmpobj.fd);
+
+    fs.writeFile(tmpobj.name+ '/newfile.txt', "Hey there!", function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        fs.readFile(tmpobj.name + '/newfile.txt', function (err1, contents) {
+            if (err1) return console.log(err1);
+            console.log("Archivo enconteraodoo...");
+        });
+        console.log("The file was saved!");
+    });
+
+    // console.log(" process.cwd() : "+process.cwd());
+    //console.log(" path.dirname(__dirname + '/tmp') : "+path.dirname(__dirname + '/tmp'));
     // console.log(process.chdir("./"));
     // console.log(process.execPath);
     // console.log(__dirname);
-    console.log(path.dirname(__dirname + '/tmp'));
+    //console.log(path.dirname(__dirname + '/tmp'));
 
-    
-    mkdirp(__dirname + '/tmp', function (err) {
-        if (err) console.error(err)
-        else console.log(__dirname+"/temp create folder")
-    });
-    mkdirp(process.cwd() + '/FilesGenerate', function (err) {
-        if (err) console.error(err)        
-        else console.log(__dirname+"/temp create folder");
-        fs.writeFile(process.cwd() + '/FilesGenerate/newfile.txt', "Hey there!", function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            fs.readFile(process.cwd() + '/FilesGenerate/newfile.txt', function (err1, contents) {
-                if(err1)return console.log(err1);
-                console.log("Archivo enconteraodoo...");
-            });        
-            console.log("The file was saved!");
-        }); 
 
-        // fs.writeFile('newfile.txt', 'Learn Node FS module', function (err) {
-        //     if (err) throw err;
-        //     console.log('File is created successfully.');
-        //   }); 
-    });
+    // mkdirp(__dirname + '/tmp', function (err) {
+    //     if (err) console.error(err)
+    //     else console.log(__dirname+"/temp create folder")
+    // });
+    // mkdirp(process.cwd() + '/FilesGenerate', function (err) {
+    //     if (err) console.error(err)        
+    //     else console.log(__dirname+"/temp create folder");
+    //     fs.writeFile(process.cwd() + '/FilesGenerate/newfile.txt', "Hey there!", function(err) {
+    //         if(err) {
+    //             return console.log(err);
+    //         }
+    //         fs.readFile(process.cwd() + '/FilesGenerate/newfile.txt', function (err1, contents) {
+    //             if(err1)return console.log(err1);
+    //             console.log("Archivo enconteraodoo...");
+    //         });        
+    //         console.log("The file was saved!");
+    //     }); 
+    //     // fs.writeFile('newfile.txt', 'Learn Node FS module', function (err) {
+    //     //     if (err) throw err;
+    //     //     console.log('File is created successfully.');
+    //     //   }); 
+    // });
 
-    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" + process.cwd() + '/tmp' });
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" +  tmpobj.name });
 });
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);

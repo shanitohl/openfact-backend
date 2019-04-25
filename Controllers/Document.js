@@ -7,9 +7,7 @@ const serviceExcel = require("../Services/ExcelDocument");
 const querys = require("../db/queries");
 const fs = require('fs');
 const uuidv1 = require('uuid/v1');
-var mkdirp = require('mkdirp');
-var getDirName = require('path').dirname;
-var objectMapper = require('object-mapper');
+var tmp = require('tmp');
 
 var documentSharedMap = {
     "filename": "fileName",
@@ -116,58 +114,59 @@ async function getExcelDocument(req, res) {
         let userId = getValueList(organizationConfig.rows, "DbxUserId").value;//ressult2.rows[2].value;
 
         let documentSales = await db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo));
-        console.log("Total documents: "+documentSales.rows.length);
+        console.log("Total documents: " + documentSales.rows.length);
         let workbook = serviceExcel.createExcelDocument(documentSales.rows, organization_name, organization_description, req.body.dateFrom + " - " + req.body.dateTo);
         //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         //res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
         let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
-        mkdirp(process.cwd() + '/FilesGenerate', function (err) {
-            if (err) {
-                console.log("Error al crear directorio..." + err);
-                //return cb(err);                       
-            }
-            console.log(process.cwd() + '/FilesGenerate');
-            console.log("creando el archivo...");
-            workbook.xlsx.writeFile(process.cwd() + '/FilesGenerate/' + fileName + '.xlsx').then((buffer) => {
-                console.log("file is written in " + getDirName('/FilesGenerate') + " -- " + fileName + ".xlsx for ID:" + organization_id);
+        // mkdirp(process.cwd() + '/FilesGenerate', function (err) {
+        //     if (err) {
+        //         console.log("Error al crear directorio..." + err);
+        //         //return cb(err);                       
+        //     }
+        var tmpobj = tmp.dirSync();
+        console.log('Folder: ', tmpobj.name);
+        console.log("creando el archivo...");
+        workbook.xlsx.writeFile(tmpobj.name + '/' + fileName + '.xlsx').then((buffer) => {
+            console.log("file is written in " + tmpobj.name + " -- " + fileName + ".xlsx for ID:" + organization_id);
 
-                require('isomorphic-fetch'); // or another library of choice.
-                var Dropbox = require('dropbox').Dropbox;
-                console.log(process.env.DBX_API_TOKEN);
-                var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
+            require('isomorphic-fetch'); // or another library of choice.
+            var Dropbox = require('dropbox').Dropbox;
+            console.log(process.env.DBX_API_TOKEN);
+            var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
 
-                fs.readFile('./FilesGenerate/' + fileName + '.xlsx', function (err, contents) {
-                    dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
-                        .then(function (response) {
-                            //var results = document.getElementById('results');
-                            //results.appendChild(document.createTextNode('File uploaded!'));
-                            //console.log(response);
-                            let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
-                                console.log("Url document : " + responseDb.url);
-                                const query = {
-                                    text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
-                                    values: [uuidv1(), organization_id, fileName + ".xlsx", responseDb.url, req.body.dateFrom, req.body.dateTo, new Date()],
+            fs.readFile(tmpobj.name + '/' + fileName + '.xlsx', function (err, contents) {
+                dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
+                    .then(function (response) {
+                        //var results = document.getElementById('results');
+                        //results.appendChild(document.createTextNode('File uploaded!'));
+                        //console.log(response);
+                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
+                            console.log("Url document : " + responseDb.url);
+                            const query = {
+                                text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
+                                values: [uuidv1(), organization_id, fileName + ".xlsx", responseDb.url, req.body.dateFrom, req.body.dateTo, new Date()],
+                            }
+                            db.query(query, (err, res) => {
+                                if (err) {
+                                    console.log(err.stack)
+                                } else {
+                                    //console.log(res)
+                                    console.log("El archivo esta listo para su descarga desde la web.")
                                 }
-                                db.query(query, (err, res) => {
-                                    if (err) {
-                                        console.log(err.stack)
-                                    } else {
-                                        //console.log(res)
-                                        console.log("El archivo esta listo para su descarga desde la web.")
-                                    }
-                                })
+                            })
 
-                            });
-
-                        })
-                        .catch(function (error) {
-                            console.error(error);
                         });
-                });
-                res.status(200).send({ result: "Se genero correctamente el archivo, espere unos momentos por favor..." });
-            });
 
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            });
+            res.status(200).send({ result: "Se genero correctamente el archivo, espere unos momentos por favor..." });
         });
+
+        //});
     } catch (err) {
         console.log(err);
         res.status(500).send("Ocurrio un error al procesar la informacion.");
