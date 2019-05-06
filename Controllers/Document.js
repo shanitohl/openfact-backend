@@ -8,6 +8,7 @@ const querys = require("../db/queries");
 const fs = require('fs');
 const uuidv1 = require('uuid/v1');
 var tmp = require('tmp');
+var moment = require('moment');
 
 var documentSharedMap = {
     "filename": "fileName",
@@ -96,6 +97,11 @@ function deleteDocument(req, res) {
 async function getExcelDocument(req, res) {
     console.log("/api/organizations/:organization_name/excel");
     try {
+
+        let dateFrom = moment(req.body.dateFrom).set({ 'hour': 0, 'minute': 0, 'second': 0 }).subtract(5, 'hours').utc().format();
+        let dateTo = moment(req.body.dateTo).add(1, 'days').set({ 'hour': 0, 'minute': 0, 'second': 0 }).subtract(5, 'hours').utc().format();
+        console.log("date format : " + dateFrom + " - " + dateTo);
+
         let organization_name = req.params.organization_name;
 
         let organizations = await db.query(querys.getQueryFindOrganization(organization_name, "master"));
@@ -113,35 +119,22 @@ async function getExcelDocument(req, res) {
         let clientIdentifier = getValueList(organizationConfig.rows, "DbxClientIdentifier").value; //ressult2.rows[1].value;
         let userId = getValueList(organizationConfig.rows, "DbxUserId").value; //ressult2.rows[2].value;
 
-        let documentSales = await db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo));
+        let documentSales = await db.query(querys.getQueryReportVentas(organization_id, dateFrom, dateTo));
         console.log("Total documents: " + documentSales.rows.length);
-        let workbook = serviceExcel.createExcelDocument(documentSales.rows, organization_name, organization_description, req.body.dateFrom + " - " + req.body.dateTo);
-        //res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        //res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+        let workbook = serviceExcel.createExcelDocument(documentSales.rows, organization_name, organization_description, dateFrom + " - " + dateTo);
         let fileName = organization_name + '_' + new Date().toISOString().replace(':', '').replace(':', '').replace('.', '');
-        // mkdirp(process.cwd() + '/FilesGenerate', function (err) {
-        //     if (err) {
-        //         console.log("Error al crear directorio..." + err);
-        //         //return cb(err);                       
-        //     }
-        var tmpobj = tmp.dirSync();
-        console.log('Folder: ', tmpobj.name);
-        console.log("creando el archivo...");
-        workbook.xlsx.writeFile(tmpobj.name + '/' + fileName + '.xlsx').then((buffer) => {
-            console.log("file is written in " + tmpobj.name + " -- " + fileName + ".xlsx for ID:" + organization_id);
 
+        var tmpobj = tmp.dirSync();
+        workbook.xlsx.writeFile(tmpobj.name + '/' + fileName + '.xlsx').then((buffer) => {
             require('isomorphic-fetch'); // or another library of choice.
             var Dropbox = require('dropbox').Dropbox;
-            console.log(process.env.DBX_API_TOKEN);
+            //console.log(process.env.DBX_API_TOKEN);
             var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
 
-            fs.readFile(tmpobj.name + '/' + fileName + '.xlsx', function(err, contents) {
+            fs.readFile(tmpobj.name + '/' + fileName + '.xlsx', function (err, contents) {
                 dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
-                    .then(function(response) {
-                        //var results = document.getElementById('results');
-                        //results.appendChild(document.createTextNode('File uploaded!'));
-                        //console.log(response);
-                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function(responseDb) {
+                    .then(function (response) {
+                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
                             console.log("Url document : " + responseDb.url);
                             const query = {
                                 text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
@@ -159,7 +152,7 @@ async function getExcelDocument(req, res) {
                         });
 
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.error(error);
                     });
             });
@@ -186,7 +179,7 @@ async function getSharedDocument(req, res) {
         let documentShared = await db.query(querys.getQuerySharedDocuments(organization_id));
         if (documentShared) {
             var shareDocuments = [];
-            documentShared.rows.forEach(function(item) {
+            documentShared.rows.forEach(function (item) {
                 shareDocuments.push({
                     "fileName": item.filename,
                     "sharedLink": item.sharedlink,
