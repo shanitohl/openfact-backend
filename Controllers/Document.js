@@ -39,7 +39,7 @@ function getDocuments(req, res) {
             return next(err)
         }
         console.log(result.rows[0].count);
-        db.query(querys.getQuerySelectAllDocuments(organization_id, paging.pageSize, paging.page), (err, result) => {
+        db.query(querys.getQuerySelectAllDocuments(organization_id, req.body), (err, result) => {
             if (err) {
                 console.log(err);
                 return next(err)
@@ -99,8 +99,8 @@ async function getExcelDocument(req, res) {
         let organization_name = req.params.organization_name;
 
         let organizations = await db.query(querys.getQueryFindOrganization(organization_name, "master"));
-        let organization_id = getOrganizationMaster(organizations.rows, false, organization_name).id;//result1.rows[0].id;
-        let organization_description = getOrganizationMaster(organizations.rows, false, organization_name).description;//result1.rows[0].id;
+        let organization_id = getOrganizationMaster(organizations.rows, false, organization_name).id; //result1.rows[0].id;
+        let organization_description = getOrganizationMaster(organizations.rows, false, organization_name).description; //result1.rows[0].id;
         let organization_id_storage = organization_id;
         let isMasterStoreage = organizations.rows[0].is_master_storage;
         if (isMasterStoreage == '1') {
@@ -109,9 +109,9 @@ async function getExcelDocument(req, res) {
         console.log(organization_name + " " + organization_id);
 
         let organizationConfig = await db.query(querys.getQueryFindOrganizationStorageConfig(organization_id_storage));
-        let accessToken = getValueList(organizationConfig.rows, "DbxAccessToken").value;//ressult2.rows[0].value;
-        let clientIdentifier = getValueList(organizationConfig.rows, "DbxClientIdentifier").value;//ressult2.rows[1].value;
-        let userId = getValueList(organizationConfig.rows, "DbxUserId").value;//ressult2.rows[2].value;
+        let accessToken = getValueList(organizationConfig.rows, "DbxAccessToken").value; //ressult2.rows[0].value;
+        let clientIdentifier = getValueList(organizationConfig.rows, "DbxClientIdentifier").value; //ressult2.rows[1].value;
+        let userId = getValueList(organizationConfig.rows, "DbxUserId").value; //ressult2.rows[2].value;
 
         let documentSales = await db.query(querys.getQueryReportVentas(organization_id, req.body.dateFrom, req.body.dateTo));
         console.log("Total documents: " + documentSales.rows.length);
@@ -135,13 +135,13 @@ async function getExcelDocument(req, res) {
             console.log(process.env.DBX_API_TOKEN);
             var dbx = new Dropbox({ accessToken: process.env.DBX_API_TOKEN });
 
-            fs.readFile(tmpobj.name + '/' + fileName + '.xlsx', function (err, contents) {
+            fs.readFile(tmpobj.name + '/' + fileName + '.xlsx', function(err, contents) {
                 dbx.filesUpload({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", contents: contents })
-                    .then(function (response) {
+                    .then(function(response) {
                         //var results = document.getElementById('results');
                         //results.appendChild(document.createTextNode('File uploaded!'));
                         //console.log(response);
-                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function (responseDb) {
+                        let shared_link_metadata = dbx.sharingCreateSharedLink({ path: '/ReportVentasOpenfact/' + fileName + ".xlsx", short_url: false }).then(function(responseDb) {
                             console.log("Url document : " + responseDb.url);
                             const query = {
                                 text: 'INSERT INTO organization_sales(id,organization_id,file_name,shared_url,date_from,date_to,created_timestamp) VALUES($1, $2,$3, $4,$5, $6,$7);',
@@ -159,7 +159,7 @@ async function getExcelDocument(req, res) {
                         });
 
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.error(error);
                     });
             });
@@ -186,7 +186,7 @@ async function getSharedDocument(req, res) {
         let documentShared = await db.query(querys.getQuerySharedDocuments(organization_id));
         if (documentShared) {
             var shareDocuments = [];
-            documentShared.rows.forEach(function (item) {
+            documentShared.rows.forEach(function(item) {
                 shareDocuments.push({
                     "fileName": item.filename,
                     "sharedLink": item.sharedlink,

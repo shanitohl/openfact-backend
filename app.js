@@ -12,7 +12,6 @@ var path = require('path');
 var fs = require('fs');
 
 app.use(cors());
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //console.log("antes Aqui no hay problemas");
@@ -24,18 +23,16 @@ app.use(bodyParser.json());
 
 app.get("/api/test", (req, res) => {
     //   var mkdirp = require('mkdirp');
-
     var tmp = require('tmp');
-
     var tmpobj = tmp.dirSync();
     console.log('File: ', tmpobj.name);
     console.log('Filedescriptor: ', tmpobj.fd);
 
-    fs.writeFile(tmpobj.name+ '/newfile.txt', "Hey there!", function (err) {
+    fs.writeFile(tmpobj.name + '/newfile.txt', "Hey there!", function(err) {
         if (err) {
             return console.log(err);
         }
-        fs.readFile(tmpobj.name + '/newfile.txt', function (err1, contents) {
+        fs.readFile(tmpobj.name + '/newfile.txt', function(err1, contents) {
             if (err1) return console.log(err1);
             console.log("Archivo enconteraodoo...");
         });
@@ -73,15 +70,13 @@ app.get("/api/test", (req, res) => {
     //     //   }); 
     // });
 
-    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" +  tmpobj.name });
+    res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" + tmpobj.name });
 });
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);
 //app.post("/api/documents/invoices", DocumentCtrl.getDocuments);
 
 app.post("/api/organizations/:organization_name/documents/invoices", DocumentCtrl.getDocuments);
-
-
 app.post("/api/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
 app.get("/api/organizations/:organization_name/sharedLinks", DocumentCtrl.getSharedDocument);
 
@@ -89,7 +84,6 @@ app.get("/api/organizations/:organization_name/sharedLinks", DocumentCtrl.getSha
 //     console.log(req.params);
 //     res.status(200).send({ message: req.params});
 // });
-
 // app.put('/users/:userId', (req, res) => { return res.send( `PUT HTTP method on user/${req.params.userId} resource`, ); });
 
 module.exports = app;
