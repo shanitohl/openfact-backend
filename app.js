@@ -11,6 +11,8 @@ const DocumentCtrl = require("./Controllers/Document");
 var path = require('path');
 var fs = require('fs');
 
+var moment = require('moment');
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -71,6 +73,14 @@ app.get("/api/test", (req, res) => {
     // });
 
     res.status(200).send({ message: "Servidor Nodejs esta corriendo... carpeta creada" + tmpobj.name });
+});
+
+
+app.post("/api/testDate", (req, res) => {
+    let dateFrom = moment(req.body.dateFrom).set({ 'hour': 0, 'minute': 0, 'second': 0 }).utc().format();//.subtract(5, 'hours')
+    let dateTo = moment(req.body.dateTo).add(1, 'days').set({ 'hour': 0, 'minute': 0, 'second': 0 }).utc().format();//.subtract(5, 'hours')
+    console.log("date format : " + dateFrom + " - " + dateTo);
+    res.status(200).send({ message: "The date in server is : " + dateFrom + " - " + dateTo });
 });
 
 // app.get("/api/documents", DocumentCtrl.getDocuments);

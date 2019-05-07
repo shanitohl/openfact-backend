@@ -2,9 +2,9 @@
 
 function getQuerySelectAllDocuments(organization_id, filter) {
     let querySelect = `select d.id,d.document_id,d.issue_date,d.document_currency_code,a.value total,d.customer_assigned_account_id,d.customer_registration_name,d.baja_en_proceso,d.status 
-  from document d 
-  inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' 
-  inner join document_required_action c on d.id = c.document_id`
+                        from document d 
+                        inner join document_attribute a on d.id = a.document_id and a.name= 'totalOperacionesGravadas' 
+                        inner join document_required_action c on d.id = c.document_id`
     let queryWhere = ` where organization_id = '` + organization_id + "'";;
 
     filter.filters.forEach(element => {
@@ -45,8 +45,7 @@ function getQueryReportVentas(organization_id, dateFrom, dateTo) {
                     a.value                             as gravada,                 
                     0                                   as exonerada,
                     0                                   as inafecta,
-                    0                                   as ValorIsc,
-                    
+                    0                                   as ValorIsc,                    
                     b.value                             as valorIgv,
                     0                                   as otros_tributos,
                     c.value                             as importe_total,
@@ -66,7 +65,7 @@ function getQueryReportVentas(organization_id, dateFrom, dateTo) {
                 left join document_attribute a on doc.id = a.document_id and a.name = 'totalOperacionesGravadas'
                 left join document_attribute b on doc.id = b.document_id and b.name = 'totalIgv'
                 left join document_attribute c on doc.id = c.document_id and c.name = 'legalMonetaryTotalPayableAmount'
-                left join document_attribute tipo_doc_client on doc.id = tipo_doc_client.document_id and tipo_doc_client.name = 'customerAdditionalAccountID'
+                left join document_attribute tipo_doc_client on doc.id = tipo_doc_client.document_id and tipo_doc_client.name = 'customerPartyAdditionalAccountID'
                 left join document_attribute d on doc.id = d.document_id and d.name = 'invoiceTypeCode'
               where doc.organization_id =  '` + organization_id + `' and  doc.document_type in ('INVOICE','CREDIT_NOTE','DEBIT_NOTE')
               and doc.issue_date BETWEEN to_date('` + dateFrom + `','YYYY-MM-DD') AND to_date('` + dateTo + `','YYYY-MM-DD') order by doc.issue_date desc;`;

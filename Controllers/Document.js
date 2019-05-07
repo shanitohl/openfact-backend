@@ -98,8 +98,8 @@ async function getExcelDocument(req, res) {
     console.log("/api/organizations/:organization_name/excel");
     try {
 
-        let dateFrom = moment(req.body.dateFrom).set({ 'hour': 0, 'minute': 0, 'second': 0 }).subtract(5, 'hours').utc().format();
-        let dateTo = moment(req.body.dateTo).add(1, 'days').set({ 'hour': 0, 'minute': 0, 'second': 0 }).subtract(5, 'hours').utc().format();
+        let dateFrom = moment(req.body.dateFrom).set({ 'hour': 0, 'minute': 0, 'second': 0 }).utc().format();//.subtract(5, 'hours')
+        let dateTo = moment(req.body.dateTo).add(1, 'days').set({ 'hour': 0, 'minute': 0, 'second': 0 }).utc().format();//.subtract(5, 'hours')
         console.log("date format : " + dateFrom + " - " + dateTo);
 
         let organization_name = req.params.organization_name;
