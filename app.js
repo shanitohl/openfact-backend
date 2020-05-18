@@ -8,6 +8,7 @@ var cors = require('cors');
 
 const ProductCtrl = require("./Controllers/Product");
 const DocumentCtrl = require("./Controllers/Document");
+const DropBox =  require('./Controllers/DropBox');
 var path = require('path');
 var fs = require('fs');
 
@@ -89,6 +90,14 @@ app.post("/api/testDate", (req, res) => {
 app.post("/api/organizations/:organization_name/documents/invoices", DocumentCtrl.getDocuments);
 app.post("/api/organizations/:organization_name/excel", DocumentCtrl.getExcelDocument);
 app.get("/api/organizations/:organization_name/sharedLinks", DocumentCtrl.getSharedDocument);
+
+// Dropbox 
+
+app.get("/api/dropbox", DropBox.allFilesDropbox);// conection dropbox
+
+app.get("/api/organizations/:organization_name/xml", DropBox.AllDocumentsOrganizationbyId);//upload to dopbox
+app.get("/api/organizations/:organization_name/date", DropBox.AllDocumentsOrganizationByDate);// 
+app.get("/api/organizations/:organization_name/download", DropBox.AllDocumentsOrganizationByDate);// download to local
 
 // (req, res) => {
 //     console.log(req.params);

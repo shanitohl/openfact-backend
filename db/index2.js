@@ -1,12 +1,12 @@
 const { Pool } = require('pg')
-//Conection BDOrigen
+//Conection BDDestino
 const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || '192.168.1.18',
+  host: process.env.DB_HOST || 'localhost',
   // host: process.env.DB_HOST || '192.168.1.38',
-  database: process.env.DB_DATA_BASE ||'openfact',//'openfactoldinptah',//'postgres' ,//'openfact',
+  database: process.env.DB_DATA_BASE ||'openfact',//'postgres' ,//'openfact',
   password: process.env.DB_PASSWORD || '123456',
-  port: process.env.DB_PORT || 5432//54321//5431
+  port: process.env.DB_PORT || 5433//54321//5431
 })
 
 module.exports = {

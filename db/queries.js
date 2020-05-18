@@ -95,6 +95,77 @@ function getQueryFindOrganizationStorageConfig(organization_id) {
     return query;
 }
 
+function getOrganizationByName(organizationName){
+let query ="select o.id from organization o  where o.name = '"+organizationName+"';"
+return query;
+}
+
+function getQueryAllDocumentsOrganizationId(organization_id, limit, offset){
+    //console.log("ooffset :::: "+offset);
+    let query = "select * from document c where c.organization_id = '"+organization_id+ "'and  order by c.created_timestamp limit '"+limit+"' offset '"+offset+"'"; 
+    return query;
+}
+
+function getQueryCountDocumentsOrganizationId(organization_id){
+    let query = "select count(*) total from document c where c.organization_id = '"+organization_id+ "'" ;
+    return query;
+}
+
+function getQueryFileById(file_id){
+     let query ="select lo_get(of.file) from organization_file of where of.id = '" + file_id + "';"
+    return query;
+}
+
+function getQueryFileNameById(file_id){
+     let query ="select of.file_name  from organization_file of where of.id = '"+ file_id + "';"
+    return query;
+}
+
+function updateFile(url, hash, id ){
+    let query = "update organization_file of set file_url = '"+ url + "', hash_content = '"+ hash + "' where of.id = '"+ id + "'";
+    return query;
+}
+
+function getQueryAllDocumentsByOrganizationByDate(organization_id, date, limit, offset){
+let query = "select c.document_type,c.cdr_file_id, c.xml_file_id, da.name, da.value, da.document_id from document c, document_attribute da where c.organization_id = '"+organization_id+ "'and c.id=da.document_id and da.name ='issueDate' and da.value like '"+date+"'  order by c.created_timestamp limit '"+limit+"' offset '"+offset+"'";
+return query;
+}
+
+function getQueryCountAllDocumentsByOrganizationByDate(organization_id, date){
+    let query = "select count(*) total from document c, document_attribute da where c.organization_id = '"+organization_id+ "'and c.id=da.document_id and da.name ='issueDate' and da.value like '"+date+"'";
+    return query;
+}
+
+function getQueryTotalFilesByOrganization(organization_id){
+    let query = "select count(*) total from organization_file of where of.organization_id ='"+organization_id+"';"
+    return query;
+}
+
+// function getQueryOneDocumentByName(organization_id, file_name){
+//     let query = "select * from organization_file of where of.organization_id ='"+organization_id+"' and of.file_name ='"+file_name+ "';"
+//     return query;
+// }
+
+// function getQueryOneDocumentXmlId(xml_file_id){
+//     let query = "select d.id from document d where d.xml_file_id ='"+ xml_file_id +"';"
+//     return query;
+// }
+
+function getQueryAllDocumentsIsNotUpload(organization_id, limit, offset){
+    //let query = "select d.* from document d inner join organization_file of on d.xml_file_id = of.id where d.organization_id ='"+organization_id+"' and  d.issue_date >='2019-04-01' and d.issue_date<='2019-05-01' and of.file_url isnull limit '"+limit+"' offset '"+offset+"'";
+    let query = "select d.* from document d inner join organization_file of on d.xml_file_id = of.id where d.organization_id ='"+organization_id+"' and of.file_url isnull limit '"+limit+"' offset '"+offset+"'";
+    return query;
+}
+
+function getQueryCountDocumentsIsNotUpload(organization_id){
+    let query = "select count(*) total from document d inner join organization_file of on d.xml_file_id = of.id where d.organization_id ='"+organization_id+"' and of.file_url isnull;";
+    return query;
+}
+
+function updateDocument(xml_file_id ){
+    let query = "update document d set is_file_db_storage = 0 where d.xml_file_id ='"+ xml_file_id + "'";
+    return query;
+}
 
 module.exports = {
     getQuerySelectAllDocuments,
@@ -102,5 +173,18 @@ module.exports = {
     getQueryReportVentas,
     getQueryFindOrganization,
     getQueryFindOrganizationStorageConfig,
-    getQuerySharedDocuments
+    getQuerySharedDocuments,
+    getOrganizationByName,
+    getQueryAllDocumentsOrganizationId,
+    getQueryFileById,
+    getQueryFileNameById,
+    updateFile,
+    getQueryCountDocumentsOrganizationId,
+    getQueryAllDocumentsByOrganizationByDate,
+    getQueryCountAllDocumentsByOrganizationByDate,
+    getQueryTotalFilesByOrganization,
+   // getQueryOneDocumentXmlId,
+    updateDocument,
+    getQueryAllDocumentsIsNotUpload,
+    getQueryCountDocumentsIsNotUpload
 }
