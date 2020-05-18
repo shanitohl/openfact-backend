@@ -28,18 +28,23 @@ function getDocument(req, res) {
     })
 }
 
-function getDocuments(req, res) {
+async function getDocuments(req, res) {
     //client.connect("POST /api/documents");
-    console.log(req.body.paging)
+    console.log(req.body)
     let paging = req.body.paging;
-    let organization_id = "fa8825af-efc5-4aaf-b06e-cd243a1ac89b";
+    //let organization_id = "fa8825af-efc5-4aaf-b06e-cd243a1ac89b";
     let totalSize = 0;
+    let organization_name = req.params.organization_name;
+    let organizations = await db.query(querys.getQueryFindOrganization(organization_name, "master"));
+    let organization_id = getOrganizationMaster(organizations.rows, false, organization_name).id; //result1.rows[0].id;
+
     db.query(querys.getQueryCountDocumentsByOrganization(organization_id), (err, result) => {
         if (err) {
             console.log(err);
             return next(err)
         }
         console.log(result.rows[0].count);
+        totalSize = result.rows[0].count;
         db.query(querys.getQuerySelectAllDocuments(organization_id, req.body), (err, result) => {
             if (err) {
                 console.log(err);
