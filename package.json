@@ -21,7 +21,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jwt-simple": "^0.5.5",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.19",
+    "mongoose": "^5.7.5",
     "node-excel-export": "^1.4.4",
     "nodemon": "^1.18.10",
     "object-mapper": "^5.0.0",
