@@ -20,7 +20,7 @@
     "guid": "0.0.12",
     "isomorphic-fetch": "^2.2.1",
     "jwt-simple": "^0.5.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongoose": "^5.4.19",
     "node-excel-export": "^1.4.4",
     "nodemon": "^1.18.10",
